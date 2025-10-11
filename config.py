@@ -1,5 +1,9 @@
 import os
 from dataclasses import dataclass
+from dotenv import load_dotenv
+
+# bu bo'lmasa .env faylidan hech qanday ma'lumot olib bo'lmaydi
+load_dotenv()
 
 @dataclass
 class Config:
