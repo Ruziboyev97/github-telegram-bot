@@ -15,6 +15,9 @@ class StartHandler:
     async def start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         """Команда /start"""
         user_name = update.effective_user.first_name
+        user_id = update.effective_user.id
+
+        self.user_service.ensure_user_exists(user_id)
         
         await update.message.reply_text(
             f"👋 Привет, {user_name}! Я бот для работы с GitHub.\n\n"

@@ -11,6 +11,10 @@ class UserService:
         """Сохранить токен пользователя"""
         return self.db.save_user_token(user_id, token)
     
+    def ensure_user_exists(self, user_id: int) -> bool:
+        """Убедиться что пользователь существует"""
+        return self.db.ensure_user_exists(user_id)
+    
     def get_token(self, user_id: int) -> Optional[str]:
         """Получить токен пользователя"""
         return self.db.get_user_token(user_id)

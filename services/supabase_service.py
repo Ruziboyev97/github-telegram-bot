@@ -37,7 +37,23 @@ class SupabaseService:
             print(f"token ma'lumotlarni saqlashda xatolik: {e}")
             return False
     
-
+    def ensure_user_exists(self, user_id: int) -> bool:
+        """Убедиться что пользователь существует в БД (создать если нет)"""
+        try:
+            # Проверяем существует ли
+            existing = self.client.table('users').select('user_id').eq('user_id', user_id).execute()
+        
+            if not existing.data:
+                # Создаём пользователя без токена
+                self.client.table('users').insert({
+                    'user_id': user_id
+                }).execute()
+                print(f"✅ Создан новый пользователь: {user_id}")
+        
+            return True
+        except Exception as e:
+            print(f"❌ Ошибка создания пользователя: {e}")
+            return False
 
     def get_user_token(self, user_id: int) -> Optional[str]:
         """Получить токен пользователя (с расшифровкой)"""
@@ -104,6 +120,7 @@ class SupabaseService:
                    repo_name: str = None, file_path: str = None) -> bool:
         """Логировать действие пользователя"""
         try:
+            self.ensure_user_exists(user_id)
             self.client.table('action_history').insert({
                 'user_id': user_id,
                 'action_type': action_type,
